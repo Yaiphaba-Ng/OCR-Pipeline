@@ -90,17 +90,17 @@ def recognize_text(
     # Return the result as a JSON string
     return json.dumps(results)
 
-# # Example usage within the script (optional):
-# if __name__ == "__main__":
-#     coco_file_path = "./utils/notebooks/data/merged_coco_result.json"
-#     image_path = "./files/input/Single Sample Inference/2013_09_19_1558.png"
-#     model_path = "./checkpoints/TrOCR"
+# Example usage within the script (optional):
+if __name__ == "__main__":
+    coco_file_path = "./utils/notebooks/data/merged_coco_result.json"
+    image_path = "files/input/Single Sample Inference/0001_front.jpg"
+    model_path = "./checkpoints/TrOCR"
     
-#     # Load COCO data from file (for testing purposes)
-#     with open(coco_file_path, 'r') as f:
-#         coco_data = json.load(f)
+    # Load COCO data from file (for testing purposes)
+    with open(coco_file_path, 'r') as f:
+        coco_data = json.load(f)
     
-#     recognized_text_json = recognize_text_from_coco(
-#         coco_data, image_path, model_path
-#     )
-#     print(recognized_text_json)
+    recognized_text_json = recognize_text(
+        coco_data, image_path, model_path
+    )
+    print(recognized_text_json)

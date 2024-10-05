@@ -50,7 +50,7 @@ async def upload_image(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
 
         # Return the URL to access the uploaded image
-        image_url = f"https://ocr_api.lamzingtech.com/uploads/{file.filename}"
+        image_url = f"http://localhost:5173/uploads/{file.filename}"
 
         json_file_path = Path("data.json")
 

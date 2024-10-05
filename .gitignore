@@ -13,3 +13,5 @@ checkpoints/TrOCR/tokenizer.json
 checkpoints/TrOCR/training_args.bin
 checkpoints/TrOCR/vocab.json
 GUI
+testing.ipynb
+uploads/

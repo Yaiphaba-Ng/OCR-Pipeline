@@ -6,11 +6,16 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from main import process_image
+from main import process_image  # Import from main.py
 
+
+import json
+from pathlib import Path
+
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-origins = [ "http://localhost", "http://localhost:3000", "http://localhost:3000", "http://localhost:5173", "http://ocr_api.lamzingtech.com"]
+origins = [ "http://localhost", "http://localhost:3000","http://localhost:5173", "http://ocr_api.lamzingtech.com"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  # Allows all hosts
@@ -18,34 +23,26 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all HTTP methods
     allow_headers=["*"],  # Allows all headers
 )
+
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # Mount the static files directory
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
-@app.post("/process/")
-async def process_image_endpoint(
-    image: UploadFile = File(...),
-):
-    """
-    Endpoint to process an uploaded image and return recognized text as JSON.
-    """
+@app.get("/load-json")
+async def load_json():
+    # Path to your JSON file
+    json_file_path = Path("recog_data.json")
+
+    # Load the JSON file
     try:
-        # Read the image contents
-        image_contents = await image.read()
-
-        # Save the image temporarily (you might want to use a temporary file)
-        temp_image_path = "temp_image.jpg"
-        with open(temp_image_path, "wb") as f:
-            f.write(image_contents)
-
-        # Process the image using the function from main.py
-        recognized_text_json = process_image(temp_image_path)
-
-        return {"recognized_text": recognized_text_json}
+        with json_file_path.open() as f:
+            data = json.load(f)
+        return JSONResponse(content=data)
     except Exception as e:
-        return {"error": str(e)}
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+    
 
 @app.post("/upload-image/")
 async def upload_image(file: UploadFile = File(...)):
@@ -53,13 +50,15 @@ async def upload_image(file: UploadFile = File(...)):
         file_location = os.path.join(UPLOAD_DIR, file.filename)
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
+            
+        # Call process_image to generate recog_data.json
+        process_image(file_location)
 
         # Return the URL to access the uploaded image
-        image_url = f"https://localhost:8000/uploads/{file.filename}"
+        image_url = f"http://localhost:8000/uploads/{file.filename}"
 
-        json_file_path = Path("data.json")
-
-    # Load the JSON file
+        # Load the JSON file
+        json_file_path = Path("recog_data.json")
         with json_file_path.open() as f:
             data = json.load(f)
         return JSONResponse(content={"image": image_url, "data":data})
