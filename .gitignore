@@ -2,5 +2,13 @@ JUNK
 __pycache__
 files
 app copy.py
-checkpoints/FAST/fast_base_20240926-134200_epoch100.pt
-checkpoints/TrOCR/*
+checkpoints/FAST/*.pt
+checkpoints/TrOCR/config.json
+checkpoints/TrOCR/generation_config.json
+checkpoints/TrOCR/merges.txt
+checkpoints/TrOCR/model.safetensors
+checkpoints/TrOCR/special_tokens_map.json
+checkpoints/TrOCR/tokenizer_config.json
+checkpoints/TrOCR/tokenizer.json
+checkpoints/TrOCR/training_args.bin
+checkpoints/TrOCR/vocab.json
