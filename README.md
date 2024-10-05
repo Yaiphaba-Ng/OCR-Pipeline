@@ -11,5 +11,5 @@ uvicorn app:app --reload
 
 ```
 yarn install
-rarn dev
+yarn dev
 ```
