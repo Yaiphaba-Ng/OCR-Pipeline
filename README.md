@@ -1,6 +1,6 @@
 # Install:
 ```
-pip install poerty
+pip install poetry
 poetry install
 ```
 
