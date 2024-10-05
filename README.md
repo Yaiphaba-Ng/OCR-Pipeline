@@ -1,1 +1,9 @@
-nehru.py is remote server backend from Da Nehru
+# Install:
+```
+pip install poerty
+poetry install
+```
+
+# GUI
+**Branch: "`local-backend`"** -->
+[lamzingtech/ocr_project](https://github.com/lamzingtech/ocr_project.git)
