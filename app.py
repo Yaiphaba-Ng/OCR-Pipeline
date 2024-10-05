@@ -10,7 +10,7 @@ from main import process_image
 
 
 app = FastAPI()
-origins = [ "http://localhost", "http://localhost:3000","http://localhost:5173", "http://ocr_api.lamzingtech.com"]
+origins = [ "http://localhost", "http://localhost:3000", "http://localhost:3000", "http://localhost:5173", "http://ocr_api.lamzingtech.com"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  # Allows all hosts

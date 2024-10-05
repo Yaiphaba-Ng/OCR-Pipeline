@@ -12,3 +12,4 @@ checkpoints/TrOCR/tokenizer_config.json
 checkpoints/TrOCR/tokenizer.json
 checkpoints/TrOCR/training_args.bin
 checkpoints/TrOCR/vocab.json
+GUI

@@ -1,0 +1,23 @@
+evaluate
+datasets
+jiwer
+accelerate
+wandb
+pyarrow
+# fsspec==2024.6.1
+scikit-learn
+torch
+torchvision
+tqdm
+numpy
+pandas
+Pillow
+python-dotenv
+jupyter
+transformers[torch]
+tensorboard
+tensorflow-cpu
+tf-keras
+jiwer
+evaluate
+# awscli
