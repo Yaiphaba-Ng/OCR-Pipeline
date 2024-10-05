@@ -18,3 +18,4 @@ uploads/
 modules/bbox_merger_copy.py
 modules/detector copy.py
 modules/recognizer copy.py
+nehru.py
