@@ -1,4 +1,6 @@
 JUNK
 __pycache__
-checkpoints
 files
+app copy.py
+checkpoints/FAST/fast_base_20240926-134200_epoch100.pt
+checkpoints/TrOCR/*

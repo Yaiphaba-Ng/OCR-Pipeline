@@ -1,23 +1,32 @@
-from fastapi import FastAPI, File, UploadFile
+import os
+import json
+import shutil
+from pathlib import Path
+from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from main import process_image  # Import the process_image function
+from main import process_image
+
 
 app = FastAPI()
-
-# Add CORS middleware
+origins = [ "http://localhost", "http://localhost:3000","http://localhost:5173", "http://ocr_api.lamzingtech.com"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins (replace with your frontend origin)
+    allow_origins=origins,  # Allows all hosts
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
+    allow_methods=["*"],  # Allows all HTTP methods
     allow_headers=["*"],  # Allows all headers
 )
+UPLOAD_DIR = "uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+# Mount the static files directory
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 @app.post("/process/")
 async def process_image_endpoint(
     image: UploadFile = File(...),
-    detector_model_file: str = "checkpoints/FAST/fast_base_20240926-134200_epoch100.pt",
-    recognizer_model_path: str = "checkpoints/TrOCR",
 ):
     """
     Endpoint to process an uploaded image and return recognized text as JSON.
@@ -31,11 +40,33 @@ async def process_image_endpoint(
         with open(temp_image_path, "wb") as f:
             f.write(image_contents)
 
-        # Process the image
-        recognized_text_json = process_image(
-            temp_image_path, detector_model_file, recognizer_model_path
-        )
+        # Process the image using the function from main.py
+        recognized_text_json = process_image(temp_image_path)
 
         return {"recognized_text": recognized_text_json}
     except Exception as e:
         return {"error": str(e)}
+
+@app.post("/upload-image/")
+async def upload_image(file: UploadFile = File(...)):
+    try:
+        file_location = os.path.join(UPLOAD_DIR, file.filename)
+        with open(file_location, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        # Return the URL to access the uploaded image
+        image_url = f"https://localhost:8000/uploads/{file.filename}"
+
+        json_file_path = Path("data.json")
+
+    # Load the JSON file
+        with json_file_path.open() as f:
+            data = json.load(f)
+        return JSONResponse(content={"image": image_url, "data":data})
+    
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
