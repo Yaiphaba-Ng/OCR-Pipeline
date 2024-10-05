@@ -2,6 +2,7 @@
 ```
 pip install poetry
 poetry install
+uvicorn app:app --reload
 ```
 
 # GUI
