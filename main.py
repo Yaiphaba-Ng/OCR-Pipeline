@@ -1,6 +1,6 @@
-from modules import detector, bbox_merger, recognizer
 import json, html
 from pathlib import Path
+from modules import detector, bbox_merger, recognizer
 
 def process_image(image_path):
     """
@@ -8,8 +8,6 @@ def process_image(image_path):
 
     Args:
         image_path (str): Path to the input image.
-        detector_model_file (str): Path to the detector model.
-        recognizer_model_path (str): Path to the recognizer model.
 
     Returns:
         str: JSON string containing the recognized text.
@@ -59,10 +57,7 @@ def process_image(image_path):
 
 # (Optional) Example usage if you run main.py directly
 if __name__ == "__main__":
-    image_path = "files/input/Single Sample Inference/0001_front.jpg"
-    detector_model_file = "checkpoints/FAST/fast_base_20240926-134200_epoch100.pt"  # Add this
-    recognizer_model_path = "checkpoints/TrOCR"
-
+    image_path = "files/input/0001_front.jpg"
     recognizer_output = process_image(image_path)
 
     # Save to a file (optional)
