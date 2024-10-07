@@ -7,7 +7,7 @@ uvicorn app:app --reload
 ----------
 
 # GUI
-**Git: [ocr-gui](https://github.com/Yaiphaba-Ng/ocr-gui)**
+**Git: [OCR-GUI](https://github.com/Yaiphaba-Ng/ocr-gui)**
 
 ```
 yarn install
