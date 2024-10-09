@@ -99,6 +99,6 @@ def detect_words(detector_model_file, image_path):
 
 # Example usage within the script (optional):
 if __name__ == "__main__":
-    image_path = "files/input/Single Sample Inference/2013_09_19_1558.png"
+    image_path = "files/input/1.jpg"
     output_json = detect_words(image_path)
     print(json.dumps(output_json, indent=4))  # Print the JSON output

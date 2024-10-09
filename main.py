@@ -12,17 +12,17 @@ def process_image(image_path):
     Returns:
         str: JSON string containing the recognized text.
     """
+    detector_model_file = "checkpoints/FAST/fast_base_20240926-134200_epoch100.pt"
+    recognizer_model_path = "checkpoints/TrOCR"
 
     # 1. Detect words
-    detector_model_file = "checkpoints/FAST/fast_base_20240926-134200_epoch100.pt"
-    detection_output = detector.detect_words(detector_model_file, image_path)
+    detection_coco = detector.detect_words(detector_model_file, image_path)
 
     # 2. Merge bounding boxes
-    merged_coco_output = bbox_merger.merge_annotations(detection_output)
+    box_merged_coco = bbox_merger.merge_annotations(detection_coco)
 
     # 3. Recognize text
-    recognizer_model_path = "checkpoints/TrOCR"
-    recognizer_output = recognizer.recognize_text(merged_coco_output, image_path, recognizer_model_path)
+    recognizer_output = recognizer.recognize_text(box_merged_coco, image_path, recognizer_model_path)
 
     # Save to a file (optional)
     with open("recog_data.json", "w") as f:
