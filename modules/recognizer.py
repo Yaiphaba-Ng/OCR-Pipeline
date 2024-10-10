@@ -1,6 +1,4 @@
-import cv2
-import torch
-import json
+import cv2, torch, json, copy
 import numpy as np
 from PIL import Image
 import torchvision.transforms as v2
@@ -15,7 +13,7 @@ def preprocess_image(image):
     rgb = cv2.cvtColor(denoised, cv2.COLOR_GRAY2RGB)
     return Image.fromarray(rgb)
 
-def load_model_and_processor(model_path):
+def load_recognizer(model_path):
     processor = TrOCRProcessor.from_pretrained(
         "microsoft/trocr-large-handwritten"
     )
@@ -45,26 +43,11 @@ def process_image(img, bbox, processor, model, device, transform):
 
     return generated_text
 
-def recognize_text(
-    coco_data, image_path, model_path
-):
-    """
-    Recognizes text from a single image using COCO annotations and a TrOCR
-    model.
+def recognize_text(coco_data, image_path, recogniser_models):
+    processor = recogniser_models[0]
+    model = recogniser_models[1]
+    device = recogniser_models[2]
 
-    Args:
-        coco_data (dict): COCO data as a dictionary.
-        image_path (str): Path to the input image.
-        model_path (str): Path to the TrOCR model.
-
-    Returns:
-        str: JSON string containing the recognized text for the image.
-    """
-
-    # Load model and processor
-    processor, model, device = load_model_and_processor(model_path)
-
-    # Define transform
     transform = v2.Compose([
         v2.Resize((384,384)),
         v2.ToTensor(),
@@ -81,26 +64,33 @@ def recognize_text(
 
     # Process each bounding box and store recognized text
     results = []
-    for ann in image_annotations:
+    updated_coco_data = copy.deepcopy(coco_data)
+
+    for ann in updated_coco_data['annotations']:
         generated_text = process_image(
             img, ann['bbox'], processor, model, device, transform
         )
         results.append(generated_text)
+        ann['trocr'] = generated_text
 
-    # Return the result as a JSON string
-    return json.dumps(results)
+    return results, updated_coco_data
 
 # Example usage within the script (optional):
 if __name__ == "__main__":
-    coco_file_path = "./utils/notebooks/data/merged_coco_result.json"
-    image_path = "files/input/Single Sample Inference/0001_front.jpg"
-    model_path = "./checkpoints/TrOCR"
+    coco_file_path = "files/input/doctr_coco.json"
+    image_path = "files/input/1.jpg"
+    model_path = "checkpoints/TrOCR"
     
     # Load COCO data from file (for testing purposes)
     with open(coco_file_path, 'r') as f:
         coco_data = json.load(f)
-    
-    recognized_text_json = recognize_text(
-        coco_data, image_path, model_path
-    )
-    print(recognized_text_json)
+    # Load model and processor
+    processor, model, device = load_recognizer(model_path)
+    recognizer_models = [processor, model, device]
+    trocr_result, trocr_coco = recognize_text(coco_data, image_path, recognizer_models)
+    print(trocr_result)
+
+    with open("files/input/trocr_result.json", "w") as file:
+        json.dump(trocr_result, file)
+    with open("files/input/trocr_coco.json", "w") as file:
+        json.dump(trocr_coco, file)

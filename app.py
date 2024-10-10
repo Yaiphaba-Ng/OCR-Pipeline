@@ -6,13 +6,9 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from main import process_image  # Import from main.py
+from main import process_image, load_models  # Import from main.py
 
-
-import json
-from pathlib import Path
-
-from fastapi.middleware.cors import CORSMiddleware
+models = load_models()
 
 app = FastAPI()
 origins = [ "http://localhost", "http://localhost:3000","http://localhost:5173", "http://ocr_api.lamzingtech.com"]
@@ -52,7 +48,7 @@ async def upload_image(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
             
         # Call process_image to generate recog_data.json
-        process_image(file_location)
+        process_image(file_location, models)
 
         # Return the URL to access the uploaded image
         image_url = f"http://localhost:8000/uploads/{file.filename}"

@@ -21,3 +21,18 @@ modules/recognizer copy.py
 nehru.py
 data.json
 utils/testing backup.ipynb
+main copy.py
+modules/bbox_merger_updated.py
+checkpoints/LayoutLM/preprocessor_config.json
+checkpoints/LayoutLM/special_tokens_map.json
+checkpoints/LayoutLM/tokenizer.json
+checkpoints/LayoutLM/tokenizer_config.json
+checkpoints/LayoutLM/vocab.json
+checkpoints/LayoutLM/training_args.bin
+checkpoints/LayoutLM/trainer_state.json
+checkpoints/LayoutLM/scheduler.pt
+checkpoints/LayoutLM/config.json
+checkpoints/LayoutLM/merges.txt
+checkpoints/LayoutLM/model.safetensors
+checkpoints/LayoutLM/optimizer.pt
+checkpoints/LayoutLM/rng_state.pth
