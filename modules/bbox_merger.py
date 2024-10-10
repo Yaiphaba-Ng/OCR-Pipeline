@@ -1,10 +1,6 @@
 import json
 from typing import List, Dict, Tuple
 
-# def load_coco_annotations(file_path: str) -> Dict:
-#     with open(file_path, "r") as f:
-#         return json.load(f)
-
 def box_overlap(box1: List[float], box2: List[float]) -> bool:
     left1, top1, width1, height1 = box1
     left2, top2, width2, height2 = box2
@@ -166,7 +162,9 @@ def merge_annotations(
 
 if __name__ == "__merge_annotations__":
     coco_file_path = "files/input/doctr_coco.json"
-    coco_data = merge_annotations(coco_file_path)
+    with open(coco_file_path, "r") as f:
+        coco_data = json.load(f)
+    merged_coco = merge_annotations(coco_data)
     # Save the updated COCO annotations
     with open("files/input/box_merged_coco.json", "w") as f:
-        json.dump(coco_data, f, indent=2)
+        json.dump(merged_coco, f, indent=2)

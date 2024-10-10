@@ -26,18 +26,18 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 # Mount the static files directory
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
-@app.get("/load-json")
-async def load_json():
-    # Path to your JSON file
-    json_file_path = Path("recog_data.json")
+# @app.get("/load-json")
+# async def load_json():
+#     # Path to your JSON file
+#     json_file_path = Path("recog_data.json")
 
-    # Load the JSON file
-    try:
-        with json_file_path.open() as f:
-            data = json.load(f)
-        return JSONResponse(content=data)
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
+#     # Load the JSON file
+#     try:
+#         with json_file_path.open() as f:
+#             data = json.load(f)
+#         return JSONResponse(content=data)
+#     except Exception as e:
+#         return JSONResponse(content={"error": str(e)}, status_code=500)
     
 
 @app.post("/upload-image/")
@@ -54,7 +54,8 @@ async def upload_image(file: UploadFile = File(...)):
         image_url = f"http://localhost:8000/uploads/{file.filename}"
 
         # Load the JSON file
-        json_file_path = Path("recog_data.json")
+        json_file_path = Path("final_result.json")
+        
         with json_file_path.open() as f:
             data = json.load(f)
         return JSONResponse(content={"image": image_url, "data":data})

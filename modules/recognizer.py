@@ -77,7 +77,7 @@ def recognize_text(coco_data, image_path, recogniser_models):
 
 # Example usage within the script (optional):
 if __name__ == "__main__":
-    coco_file_path = "files/input/doctr_coco.json"
+    coco_file_path = "files/input/box_merged_coco.json"
     image_path = "files/input/1.jpg"
     model_path = "checkpoints/TrOCR"
     
